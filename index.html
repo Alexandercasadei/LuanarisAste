@@ -89,7 +89,7 @@
   <script>
     async function inviaMessaggio() {
       const codiceUtente = document.getElementById("accesso").value.trim();
-      const codiceCorretto = atob("c3QwMDE="); 
+      const codiceCorretto = atob("c3QwMDE="); // "st001" decodificato da base64
 
       if (codiceUtente !== codiceCorretto) {
         alert("❌ Codice d’accesso errato. Accesso negato.");
@@ -131,12 +131,11 @@ ${fine}
       const TOKEN = "7766777745:AAHGo2gMAKxADcE1yIcC4NM7B2TgRjIuBLE";
       const CHAT_ID = "@lunarisneotecno";
 
-      const formData = new FormData();
-      formData.append("chat_id", CHAT_ID);
-      formData.append("caption", messaggio);
-      formData.append("parse_mode", "HTML");
-
       if (immagine) {
+        const formData = new FormData();
+        formData.append("chat_id", CHAT_ID);
+        formData.append("caption", messaggio);
+        formData.append("parse_mode", "HTML");
         formData.append("photo", immagine);
 
         const response = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
@@ -146,6 +145,7 @@ ${fine}
 
         if (response.ok) {
           alert("✅ Asta inviata con successo!");
+          svuotaCampi();
         } else {
           alert("❌ Errore durante l'invio.");
         }
@@ -161,11 +161,22 @@ ${fine}
         });
 
         if (response.ok) {
-          alert("✅ Asta inviata con successo (senza immagine)!");
+          alert("✅ Asta inviata con successo!");
+          svuotaCampi();
         } else {
           alert("❌ Errore durante l'invio.");
         }
       }
+    }
+
+    function svuotaCampi() {
+      document.getElementById("accesso").value = "";
+      document.getElementById("oggetto").value = "";
+      document.getElementById("descrizione").value = "";
+      document.getElementById("base").value = "";
+      document.getElementById("rilancio").value = "";
+      document.getElementById("fine").value = "";
+      document.getElementById("immagine").value = "";
     }
   </script>
 </body>
