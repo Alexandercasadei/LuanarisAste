@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Calcolo quota azienda</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f0f0f0;
+    }
+    input, button {
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Calcolo quota azienda e persona</h2>
+
+  <label for="importo">Inserisci importo finale dell'asta (€):</label><br>
+  <input type="number" id="importo" step="0.01" min="0"><br>
+  <button onclick="calcola()">Calcola</button>
+
+  <div class="result" id="risultato"></div>
+
+  <script>
+    function calcola() {
+      const importo = parseFloat(document.getElementById("importo").value);
+      if (isNaN(importo) || importo <= 0) {
+        document.getElementById("risultato").textContent = "Inserisci un importo valido.";
+        return;
+      }
+
+      let quota = (importo * 0.05);
+      quota = Math.round(quota); // arrotonda
+
+      if (quota >= 6 || quota === 5) {
+        quota = 10;
+      } else if (quota < 5) {
+        quota = 0;
+      }
+
+      const persona = importo - quota;
+
+      document.getElementById("risultato").innerHTML = `
+        Importo asta: €${importo.toFixed(2)}<br>
+        Quota azienda: €${quota.toFixed(2)}<br>
+        Quota alla persona: €${persona.toFixed(2)}<br>
+        Somma totale: €${(quota + persona).toFixed(2)}
+      `;
+    }
+  </script>
+
+</body>
+</html>
