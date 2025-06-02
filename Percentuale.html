@@ -2,12 +2,12 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Calcolo quota azienda</title>
+  <title>Calcolo Quota Asta</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Poppins, sans-serif;
       padding: 40px;
-      background-color: #f0f0f0;
+      background: linear-gradient(to right, #f0f0f0, #ffffff);
     }
     input, button {
       padding: 10px;
@@ -22,15 +22,24 @@
 </head>
 <body>
 
-  <h2>Calcolo quota azienda e persona</h2>
+  <h2>Calcolo quota azienda/persona da asta</h2>
 
-  <label for="importo">Inserisci importo finale dell'asta (€):</label><br>
+  <label for="importo">Importo finale asta (€):</label><br>
   <input type="number" id="importo" step="0.01" min="0"><br>
   <button onclick="calcola()">Calcola</button>
 
   <div class="result" id="risultato"></div>
 
   <script>
+    function arrotondaAllaDecina(num) {
+      const resto = num % 10;
+      if (resto <= 5) {
+        return num - resto;
+      } else {
+        return num + (10 - resto);
+      }
+    }
+
     function calcola() {
       const importo = parseFloat(document.getElementById("importo").value);
       if (isNaN(importo) || importo <= 0) {
@@ -38,22 +47,23 @@
         return;
       }
 
-      let quota = (importo * 0.05);
-      quota = Math.round(quota); // arrotonda
+      // Calcolo del 5%
+      let quotaAzienda = importo * 0.05;
 
-      if (quota >= 6 || quota === 5) {
-        quota = 10;
-      } else if (quota < 5) {
-        quota = 0;
-      }
+      // Arrotondamento alla decina
+      quotaAzienda = arrotondaAllaDecina(Math.round(quotaAzienda));
 
-      const persona = importo - quota;
+      // Calcolo quota persona
+      let quotaPersona = importo - quotaAzienda;
+      quotaPersona = arrotondaAllaDecina(Math.round(quotaPersona));
+
+      const somma = quotaAzienda + quotaPersona;
 
       document.getElementById("risultato").innerHTML = `
         Importo asta: €${importo.toFixed(2)}<br>
-        Quota azienda: €${quota.toFixed(2)}<br>
-        Quota alla persona: €${persona.toFixed(2)}<br>
-        Somma totale: €${(quota + persona).toFixed(2)}
+        Quota azienda (5% arrotondato): €${quotaAzienda.toFixed(2)}<br>
+        Quota persona (arrotondata): €${quotaPersona.toFixed(2)}<br>
+        Somma totale (check): €${somma.toFixed(2)}
       `;
     }
   </script>
