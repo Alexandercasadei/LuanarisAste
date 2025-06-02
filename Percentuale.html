@@ -2,71 +2,108 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Calcolo Quota Asta</title>
+  <title>Calcolo Quota Asta Lunaris</title>
   <style>
     body {
-      font-family: Poppins, sans-serif;
+      font-family: "Poppins", sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
       padding: 40px;
-      background: linear-gradient(to right, #f0f0f0, #ffffff);
     }
-    input, button {
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input {
+      width: 100%;
       padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
     }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      background-color: #8e44ad;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #732d91;
+    }
+
     .result {
       margin-top: 20px;
       font-weight: bold;
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Calcolo Quote Asta Lunaris</h2>
 
-  <h2>Calcolo quota azienda/persona da asta</h2>
+    <label for="importo">Importo finale dell'asta (€):</label>
+    <input type="number" id="importo" placeholder="Es: 1555" step="0.01">
 
-  <label for="importo">Importo finale asta (€):</label><br>
-  <input type="number" id="importo" step="0.01" min="0"><br>
-  <button onclick="calcola()">Calcola</button>
+    <button onclick="calcola()">Calcola</button>
 
-  <div class="result" id="risultato"></div>
+    <div class="result" id="risultato"></div>
+  </div>
 
   <script>
-    function arrotondaAllaDecina(num) {
-      const resto = num % 10;
-      if (resto <= 5) {
-        return num - resto;
-      } else {
-        return num + (10 - resto);
-      }
+    function arrotondaDecine(valore) {
+      const resto = valore % 10;
+      return resto <= 5 ? valore - resto : valore + (10 - resto);
     }
 
     function calcola() {
-      const importo = parseFloat(document.getElementById("importo").value);
-      if (isNaN(importo) || importo <= 0) {
-        document.getElementById("risultato").textContent = "Inserisci un importo valido.";
+      const input = parseFloat(document.getElementById("importo").value);
+      const risultatoDiv = document.getElementById("risultato");
+
+      if (isNaN(input) || input <= 0) {
+        risultatoDiv.textContent = "Inserisci un importo valido.";
         return;
       }
 
-      // Calcolo del 5%
-      let quotaAzienda = importo * 0.05;
+      let quotaAzienda = arrotondaDecine(Math.round(input * 0.05));
+      let quotaPersona = arrotondaDecine(input - quotaAzienda);
+      let somma = quotaAzienda + quotaPersona;
 
-      // Arrotondamento alla decina
-      quotaAzienda = arrotondaAllaDecina(Math.round(quotaAzienda));
-
-      // Calcolo quota persona
-      let quotaPersona = importo - quotaAzienda;
-      quotaPersona = arrotondaAllaDecina(Math.round(quotaPersona));
-
-      const somma = quotaAzienda + quotaPersona;
-
-      document.getElementById("risultato").innerHTML = `
-        Importo asta: €${importo.toFixed(2)}<br>
-        Quota azienda (5% arrotondato): €${quotaAzienda.toFixed(2)}<br>
-        Quota persona (arrotondata): €${quotaPersona.toFixed(2)}<br>
-        Somma totale (check): €${somma.toFixed(2)}
+      risultatoDiv.innerHTML = `
+        💼 <b>Quota azienda:</b> €${quotaAzienda}<br>
+        👤 <b>Quota persona:</b> €${quotaPersona}<br>
+        🔎 <b>Controllo somma:</b> €${somma}
       `;
     }
   </script>
-
 </body>
 </html>
