@@ -94,12 +94,21 @@
         return;
       }
 
-      let quotaAzienda = arrotondaDecine(Math.round(input * 0.05));
+      let percentuale = 0.05;
+      if (input >= 20000 && input < 60000) {
+        percentuale = 0.04;
+      } else if (input >= 60000 && input < 100000) {
+        percentuale = 0.03;
+      } else if (input >= 100000) {
+        percentuale = 0.02;
+      }
+
+      let quotaAzienda = arrotondaDecine(Math.round(input * percentuale));
       let quotaPersona = arrotondaDecine(input - quotaAzienda);
       let somma = quotaAzienda + quotaPersona;
 
       risultatoDiv.innerHTML = `
-        💼 <b>Quota azienda:</b> €${quotaAzienda}<br>
+        💼 <b>Quota azienda (${(percentuale * 100).toFixed(0)}%):</b> €${quotaAzienda}<br>
         👤 <b>Quota persona:</b> €${quotaPersona}<br>
         🔎 <b>Controllo somma:</b> €${somma}
       `;
