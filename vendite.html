@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Invio Vendite Lunaris</title>
+  <title>Invio vendita Lunaris</title>
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -72,7 +72,7 @@
     <textarea id="descrizione" rows="3" placeholder="Scrivi qui la descrizione..." required></textarea>
 
     <label>Prezzo:</label>
-    <input type="number" id="price" placeholder="Es: 1650" required>
+    <input type="number" id="prezzo" placeholder="Es: 50000" required>
 
     <label>Immagine (facoltativa):</label>
     <input type="file" id="immagine" accept="image/*">
@@ -92,9 +92,7 @@
 
       const oggetto = document.getElementById("oggetto").value.trim();
       const descrizione = document.getElementById("descrizione").value.trim();
-      const base = document.getElementById("base").value.trim();
-      const rilancio = document.getElementById("rilancio").value.trim();
-      const fine = document.getElementById("fine").value.trim();
+      const prezzo = document.getElementById("prezzo").value.trim();
       const immagine = document.getElementById("immagine").files[0];
 
       const messaggio = `🌙 | VETRINA LUNARIS | 🌙
@@ -105,11 +103,11 @@ ${oggetto}
 📝 Descrizione:
 ${descrizione}
 
-💰Prezzo:
-${price}€
+💰 Prezzo:
+${prezzo}€
 
-👉 Per prenotarlo, commenta questo post con "Prenoto (Nick)"
-    Per fare oferte inferiori al Prezzo, comentare il post con "Offerta (cifra)". 
+👉 Per prenotarlo, commenta questo post con "Prenoto (nick)"
+       Per fare offerte inferiori al prezzo, commentare il post con "Offerta (cifra)"
 
 ⚠️ Regole:
 – Vietato fare prenotazioni finte
@@ -132,7 +130,7 @@ ${price}€
         });
 
         if (response.ok) {
-          alert("✅ Asta inviata con successo!");
+          alert("✅ Vetrina inviata con successo!");
         } else {
           alert("❌ Errore durante l'invio.");
         }
@@ -148,7 +146,7 @@ ${price}€
         });
 
         if (response.ok) {
-          alert("✅ Asta inviata con successo (senza immagine)!");
+          alert("✅ Vetrina inviata con successo (senza immagine)!");
         } else {
           alert("❌ Errore durante l'invio.");
         }
