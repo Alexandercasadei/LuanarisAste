@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Invio Asta Lunaris</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      background-color: #8e44ad;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #732d91;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pubblica Asta Lunaris</h2>
+
+    <label>Codice d'accesso:</label>
+    <input type="password" id="accesso" placeholder="Inserisci il codice" required>
+
+    <label>Oggetto:</label>
+    <textarea id="oggetto" rows="2" placeholder="Scrivi qui l'oggetto..." required></textarea>
+
+    <label>Descrizione:</label>
+    <textarea id="descrizione" rows="3" placeholder="Scrivi qui la descrizione..." required></textarea>
+
+    <label>Prezzo:</label>
+    <input type="number" id="price" placeholder="Es: 1650" required>
+
+    <label>Immagine (facoltativa):</label>
+    <input type="file" id="immagine" accept="image/*">
+
+    <button onclick="inviaMessaggio()">Invia</button>
+  </div>
+
+  <script>
+    async function inviaMessaggio() {
+      const codiceUtente = document.getElementById("accesso").value.trim();
+      const codiceCorretto = atob("c3QwMDE="); // "st001"
+
+      if (codiceUtente !== codiceCorretto) {
+        alert("❌ Codice d’accesso errato. Accesso negato.");
+        return;
+      }
+
+      const oggetto = document.getElementById("oggetto").value.trim();
+      const descrizione = document.getElementById("descrizione").value.trim();
+      const base = document.getElementById("base").value.trim();
+      const rilancio = document.getElementById("rilancio").value.trim();
+      const fine = document.getElementById("fine").value.trim();
+      const immagine = document.getElementById("immagine").files[0];
+
+      const messaggio = `🌙 | VETRINA LUNARIS | 🌙
+
+📦 Oggetto:
+${oggetto}
+
+📝 Descrizione:
+${descrizione}
+
+💰Prezzo:
+${price}€
+
+👉 Per prenotarlo, commenta questo post con "Prenoto (Nick)"
+    Per fare oferte inferiori al Prezzo, comentare il post con "Offerta (cifra)". 
+
+⚠️ Regole:
+– Vietato fare prenotazioni finte
+– Seguire il canale`;
+
+      const TOKEN = "7766777745:AAHGo2gMAKxADcE1yIcC4NM7B2TgRjIuBLE";
+      const CHAT_ID = "@lunarisneotecno";
+
+      const formData = new FormData();
+      formData.append("chat_id", CHAT_ID);
+      formData.append("caption", messaggio);
+      formData.append("parse_mode", "HTML");
+
+      if (immagine) {
+        formData.append("photo", immagine);
+
+        const response = await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+          method: "POST",
+          body: formData
+        });
+
+        if (response.ok) {
+          alert("✅ Asta inviata con successo!");
+        } else {
+          alert("❌ Errore durante l'invio.");
+        }
+      } else {
+        const textData = new URLSearchParams();
+        textData.append("chat_id", CHAT_ID);
+        textData.append("text", messaggio);
+        textData.append("parse_mode", "HTML");
+
+        const response = await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+          method: "POST",
+          body: textData
+        });
+
+        if (response.ok) {
+          alert("✅ Asta inviata con successo (senza immagine)!");
+        } else {
+          alert("❌ Errore durante l'invio.");
+        }
+      }
+    }
+  </script>
+</body>
+</html>
